@@ -1,0 +1,41 @@
+server:
+  port: 8080
+spring:
+  datasource:
+    url: jdbc:postgresql://162.241.7.163/corelogic?sslmode=disable
+    username: postgres
+    password: qub3dl@b123*
+    initialization-mode: always
+  jpa:
+    hibernate:
+      ddl-auto: update
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+  jackson:
+    serialization:
+      fail-on-empty-beans: false
+  kafka:
+    consumer:
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.LongDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.LongSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    properties:
+      bootstrap:
+        servers: pkc-4yyd6.us-east1.gcp.confluent.cloud:9092
+      sasl:
+        jaas:
+          config: org.apache.kafka.common.security.plain.PlainLoginModule   required username="JGA6U7POQSQURC65"   password="s04/RwWY5iMGwRmD9uwyD04X9ncaLCU2T6khpOsfyBIkUKdzHHAg3BeZlbHPIG7I";
+        mechanism: PLAIN
+      security:
+        protocol: SASL_SSL
+      ssl:
+        endpoint:
+          identification:
+            algorithm: https
