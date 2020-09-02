@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
 import com.qubedlab.crair.util.Constants;
+import java.util.HashMap;
 
 
 
@@ -46,9 +47,10 @@ public void sendToGeneralResponse(Map<String, Object> data) {
 }
 
 public void sendToIDVerificationRequest(Map<String, Object> data) {
-	
+	Map<String, Object> map = new HashMap<String,Object>();
+		map.put("customerData",data);
 
-	 this.kafkaTemplate.send("id-verification-request", gson.toJson(data));
+	 this.kafkaTemplate.send("id-verification-request", gson.toJson(map));
 
 	 
 }
