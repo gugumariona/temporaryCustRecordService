@@ -84,7 +84,7 @@ public class DecodeIDDataServiceImpl  implements DecodeIDDataService{
 	
 	
 private Map<String, Object> formatDates(Map<String, Object> decodedIDData){
-	//08152020
+
 	SimpleDateFormat scannedDobFormatte=new SimpleDateFormat("MMddyyyy");
     
     try {
@@ -103,10 +103,10 @@ private Map<String, Object> formatDates(Map<String, Object> decodedIDData){
 		decodedIDData.put("Date_of_Birth", sdf.format(Date_of_Birth)) ;
 		decodedIDData.put("License_Expiration_Date", sdf.format(License_Expiration_Date)) ;
 	} catch (ParseException e) {
-		
+		LOGGER.error(e.getMessage());
 		e.printStackTrace();
 	}
-   // new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss").parse(PaidDate.trim());
+
     ValidateLicenseExpirationDate(decodedIDData);
 	return decodedIDData;}
 
@@ -121,10 +121,10 @@ private int ValidateLicenseExpirationDate(Map<String, Object> decodedIDData){
 
 		LocalDate License_Expiration_Date_l = License_Expiration_Date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 		
-		System.out.println( " ######### today " + LocalDate.now());
-		System.out.println( " ######### License_Expiration_Date " + License_Expiration_Date);
-		System.out.println( " ######### compare tiem " + License_Expiration_Date_l.compareTo(LocalDate.now()));
-//		LocalDate endDate_l = endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+		LOGGER.info( " ######### today " + LocalDate.now());
+		LOGGER.info( " ######### License_Expiration_Date " + License_Expiration_Date);
+		LOGGER.info( " ######### compare tiem " + License_Expiration_Date_l.compareTo(LocalDate.now()));
+
 		
 		response = License_Expiration_Date_l.compareTo(LocalDate.now()) ;
 		
