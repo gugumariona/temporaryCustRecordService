@@ -66,7 +66,7 @@ public class DecodeIDDataServiceImpl  implements DecodeIDDataService{
 			
 		if(ValidateLicenseExpirationDate(formatDates(customerData))>-1) {
 			
-			return	formatDates(customerData) ;
+			return	(customerData) ;
 		}else {
 			
 			Map<String ,Object> data  = new HashMap<String ,Object>();
@@ -100,8 +100,9 @@ private Map<String, Object> formatDates(Map<String, Object> decodedIDData){
 		sdf.applyPattern(NEW_FORMAT);
 		
 		
-		decodedIDData.put("Date_of_Birth", sdf.format(Date_of_Birth)) ;
-		decodedIDData.put("License_Expiration_Date", sdf.format(License_Expiration_Date)) ;
+		decodedIDData.put("Date_of_Birth", new SimpleDateFormat(NEW_FORMAT).format(Date_of_Birth)) ;
+		decodedIDData.put("License_Expiration_Date", new SimpleDateFormat(NEW_FORMAT).format(License_Expiration_Date)) ;
+	
 	} catch (ParseException e) {
 		LOGGER.error(e.getMessage());
 		e.printStackTrace();
