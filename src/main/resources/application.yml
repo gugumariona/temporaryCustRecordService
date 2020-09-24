@@ -2,9 +2,11 @@ server:
   port: 8080
 spring:
   datasource:
-    url: jdbc:postgresql://162.241.7.163/corelogic?sslmode=disable
-    username: postgres
+    url: jdbc:postgresql://104.254.246.218/corelogic?sslmode=disable
     password: qub3dl@b123*
+    username: postgres
+#    url: jdbc:postgresql://localhost/customerdata
+#    password: root
     initialization-mode: always
   jpa:
     hibernate:
