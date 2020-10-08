@@ -1,5 +1,12 @@
 server:
   port: 8080
+
+#spring:
+#  profiles:
+#    active: "dev"
+#  main:
+#    banner-mode: "off"
+    
 spring:
   datasource:
     url: jdbc:postgresql://104.254.246.218/corelogic?sslmode=disable

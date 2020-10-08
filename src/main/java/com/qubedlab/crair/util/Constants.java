@@ -4,6 +4,8 @@ public class Constants {
 
     public static final String genResponseTopic = "gen-response";
     public static final String BRANCHID = "branchid";
+    public static final String BRANCHID_TEMP = "1509931";
+    public static final String PARENTID_TEMP = "1509932";
     public static final String PARENTID = "parentid";
     public static final String firstName = "firstName";
     public static final String LastName = "Last_Name";
@@ -16,6 +18,13 @@ public class Constants {
     public static final String Height_in_FT_IN = "Height_in_FT_IN";
     public static final String Eye_Color = "Eye_Color";
     public static final String CUSTOMER_GLOBAL_ID = "customerGlobalID";
+
+    public static final String SEARCHVALUE = "searchvalue";
+    public static final String USER_ID = "userId";
+    public static final String MANAGER = "manager";
+    public static final String USER_ROLE = "userRole";
+
+    public static final String IDDATA = "idData";
 
     public static final String EMPTY_STRING = "";
     public static final String SPACE = " ";

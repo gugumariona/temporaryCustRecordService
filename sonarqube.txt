@@ -1,0 +1,4 @@
+mvn sonar:sonar \
+  -Dsonar.projectKey=CustomerRecordAndIdentityResolve \
+  -Dsonar.host.url=http://localhost:9000 \
+  -Dsonar.login=6dfae2029c2ddd0ec119e72b442eeffcb977656c

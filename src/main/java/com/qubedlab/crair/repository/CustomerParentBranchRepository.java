@@ -20,6 +20,10 @@ public interface CustomerParentBranchRepository extends JpaRepository<CustomerPa
     public List<CustomerParentBranch> listCustomersByBranchId(String branchId, LocalDateTime startDate,
 	    LocalDateTime endDate);
 
+    @Query("FROM CustomerParentBranch WHERE branchId =:branchId AND date_last_scanned BETWEEN :startDate AND :endDate  AND userId =:userId ORDER BY date_last_scanned DESC")
+    public List<CustomerParentBranch> listCustomersByBranchIdUserId(String branchId, LocalDateTime startDate,
+	    LocalDateTime endDate, String userId);
+
     @Query("FROM CustomerParentBranch WHERE parentId =:parentId AND branchId =:branchId AND customerGlobalID =:customerGlobalID ORDER BY date_last_scanned DESC")
     public CustomerParentBranch getCustomerByParentBranchGlobalID(String parentId, String branchId,
 	    String customerGlobalID);

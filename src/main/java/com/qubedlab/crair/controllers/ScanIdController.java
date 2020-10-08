@@ -9,8 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,9 +36,11 @@ import com.qubedlab.crair.service.GlobalIDService;
 import com.qubedlab.crair.service.RelativesContactDetailsService;
 import com.qubedlab.crair.util.Constants;
 
+import ch.qos.logback.classic.Logger;
+
 @RestController
 @RequestMapping("/scan")
-@CrossOrigin
+
 public class ScanIdController {
 
     @Autowired
@@ -74,12 +76,16 @@ public class ScanIdController {
     @Autowired
     private GlobalIDService globalIDService;
 
+    private static final Logger log = (Logger) LoggerFactory.getLogger(ScanIdController.class);
+
     @PostMapping(path = "/customerid")
     public Map<String, Object> saveIdData(@RequestBody Map<String, Object> data) {
 
-	String idData = data.get("idData").toString();
-	Map<String, Object> responseDataMap = decodeIDDataService.decodeCustomerScannedId(idData);
+	String idData = data.get(Constants.IDDATA).toString();
+	String userId = data.get(Constants.USER_ID).toString();
 
+	Map<String, Object> responseDataMap = decodeIDDataService.decodeCustomerScannedId(idData);
+	responseDataMap.put(Constants.USER_ID, userId);
 	return saveCustomerScannedID(responseDataMap);
 
     }
@@ -144,7 +150,8 @@ public class ScanIdController {
 	List<CustomerPersonalDetails> responseList = new ArrayList<CustomerPersonalDetails>();
 	List<CustomerPersonalDetails> responseList2 = new ArrayList<CustomerPersonalDetails>();
 	List<CustomerParentBranch> cpbList = customerParentBranchService.listCustomersByBranchId(
-		data.get(Constants.PARENTID).toString(), data.get(Constants.BRANCHID).toString());
+		data.get(Constants.PARENTID).toString(), data.get(Constants.BRANCHID).toString(), Constants.USER_ID,
+		Constants.USER_ROLE);
 
 	cpbList.forEach((cpbObject -> {
 
@@ -153,7 +160,7 @@ public class ScanIdController {
 	}));
 
 	responseList.forEach((cpbObject -> {
-	    String searchVal = data.get("searchvalue").toString().toLowerCase();
+	    String searchVal = data.get(Constants.SEARCHVALUE).toString().toLowerCase();
 	    if (cpbObject.getFirstName().toLowerCase().contains(searchVal)
 		    || cpbObject.getLastName().toLowerCase().contains(searchVal)
 		    || cpbObject.getLicenseIDNumber().toLowerCase().contains(searchVal)) {
@@ -172,16 +179,28 @@ public class ScanIdController {
 	Map<String, Object> responseMap = new LinkedHashMap<String, Object>();
 	List<CustomerPersonalDetails> responseList = new ArrayList<CustomerPersonalDetails>();
 
-	List<CustomerParentBranch> cpbList = customerParentBranchService.listCustomersByBranchId(
-		data.get(Constants.PARENTID).toString(), data.get(Constants.BRANCHID).toString());
+	try {
 
-	cpbList.forEach((cpbObject -> {
+	    List<CustomerParentBranch> cpbList = customerParentBranchService.listCustomersByBranchId(
+		    data.get(Constants.PARENTID).toString(), data.get(Constants.BRANCHID).toString(),
+		    data.get(Constants.USER_ID).toString(), data.get(Constants.USER_ROLE).toString());
 
-	    responseList.add(temporaryCustomerService.CustomerByGlobalID(cpbObject.getCustomerGlobalID()));
+	    cpbList.forEach((cpbObject -> {
 
-	}));
+		responseList.add(temporaryCustomerService.CustomerByGlobalID(cpbObject.getCustomerGlobalID()));
 
-	responseMap.put("customerList", responseList);
+	    }));
+
+	    responseMap.put("customerList", responseList);
+
+	} catch (NullPointerException e) {
+
+	    log.error(e.getStackTrace().toString());
+
+	    responseMap.put("error",
+		    " One of the following parameters might be missing in your post request :(parentid,branchid,userId,userRole");
+	}
+
 	return responseMap;
     }
 
@@ -233,24 +252,28 @@ public class ScanIdController {
 
     CustomerPersonalDetails temporaryCustomerWithErrorStatus(Map<String, Object> responseDataMap,
 	    String customerGlobalID) {
+
 	CustomerPersonalDetails tc = new CustomerPersonalDetails();
-	tc.setDateOfBirth(responseDataMap.get("Date_of_Birth").toString());
+	try {
+	    tc.setDateOfBirth(responseDataMap.get("Date_of_Birth").toString());
 
-	tc.setFirstName(responseDataMap.get("First_Name").toString());
+	    tc.setFirstName(responseDataMap.get("First_Name").toString());
 
-	tc.setLastName(responseDataMap.get("Last_Name").toString());
-	tc.setLicenseExpirationDate(responseDataMap.get("License_Expiration_Date").toString());
-	tc.setLicenseIDNumber(responseDataMap.get("License_ID_Number").toString());
+	    tc.setLastName(responseDataMap.get("Last_Name").toString());
+	    tc.setLicenseExpirationDate(responseDataMap.get("License_Expiration_Date").toString());
+	    tc.setLicenseIDNumber(responseDataMap.get("License_ID_Number").toString());
 
-	tc.setMiddleInitial(responseDataMap.get("Eye_Color").toString());
-	tc.setMiddleName(responseDataMap.get("Middle_Name").toString());
+	    tc.setMiddleInitial(responseDataMap.get("Eye_Color").toString());
+	    tc.setMiddleName(responseDataMap.get("Middle_Name").toString());
 
-	tc.setDateCreated(LocalDate.now());
+	    tc.setDateCreated(LocalDate.now());
 
-	tc.setCustomerGlobalID(customerGlobalID.toString());
-	tc.setStatus("Blocked");
-	tc.setStatusDescription(responseDataMap.get("errorDescription").toString());
-
+	    tc.setCustomerGlobalID(customerGlobalID.toString());
+	    tc.setStatus("Blocked");
+	    tc.setStatusDescription(responseDataMap.get("errorDescription").toString());
+	} catch (Exception e) {
+	    e.printStackTrace();
+	}
 	return tc;
     }
 
@@ -289,11 +312,8 @@ public class ScanIdController {
 
 	tc.setMiddleInitial(responseDataMap.get("Eye_Color").toString());
 	tc.setMiddleName(responseDataMap.get("Middle_Name").toString());
-
 	tc.setCustomerGlobalID(customerGlobalID.toString());
-
 	tc.setStatus("Active");
-
 	tc.setDateCreated(LocalDate.now());
 
 	return tc;
@@ -321,7 +341,8 @@ public class ScanIdController {
 
 		CustomerParentBranch cpb = new CustomerParentBranch();
 		cpb.setCustomerGlobalID(customerGlobalID.toString());
-		cpb.setBranchId("1509931");
+		cpb.setBranchId(Constants.BRANCHID_TEMP);
+		cpb.setUserId(responseDataMap.get(Constants.USER_ID).toString());
 		cpb.setParentId("1509932");
 		cpb.setLicenseIDNumber(responseDataMap.get("License_ID_Number").toString());
 		cpb.setDateLastScanned(LocalDateTime.now());
@@ -350,8 +371,9 @@ public class ScanIdController {
 
 		CustomerParentBranch cpb = new CustomerParentBranch();
 		cpb.setCustomerGlobalID(customerGlobalID.toString());
-		cpb.setBranchId("1509931");
+		cpb.setBranchId(Constants.BRANCHID_TEMP);
 		cpb.setParentId("1509932");
+		cpb.setUserId(responseDataMap.get(Constants.USER_ID).toString());
 		cpb.setLicenseIDNumber(responseDataMap.get("License_ID_Number").toString());
 		cpb.setDateLastScanned(LocalDateTime.now());
 		customerParentBranchService.save(cpb);
@@ -359,7 +381,7 @@ public class ScanIdController {
 	    } else { // if not blocked and there is an existing record then update
 
 		List<CustomerParentBranch> cpbList = customerParentBranchService
-			.listCustomersByParentBranchlicenseIDNumber("1509932", "1509931",
+			.listCustomersByParentBranchlicenseIDNumber("1509932", Constants.BRANCHID_TEMP,
 				responseDataMap.get("License_ID_Number").toString());
 		if (cpbList.size() > 0) {
 		    CustomerParentBranch cpbToUpdate = cpbList.get(0);
@@ -369,16 +391,16 @@ public class ScanIdController {
 
 		    CustomerParentBranch cpb = new CustomerParentBranch();
 		    cpb.setCustomerGlobalID(customerGlobalID.toString());
-		    cpb.setBranchId("1509931");
+		    cpb.setBranchId(Constants.BRANCHID_TEMP);
 		    cpb.setParentId("1509932");
+		    cpb.setUserId(responseDataMap.get(Constants.USER_ID).toString());
 		    cpb.setLicenseIDNumber(responseDataMap.get("License_ID_Number").toString());
 		    cpb.setDateLastScanned(LocalDateTime.now());
 		    customerParentBranchService.save(cpb);
 		}
 
 	    }
-
-	    data.put("customerPersonalDetails", temporaryCustomerWithErrorStatus(responseDataMap, customerGlobalID));
+	    data.put("customerPersonalDetails", temporaryCustomerService.CustomerByGlobalID(customerGlobalID));
 	    data.put("customerBiometricDetails", customerBiometricDetails(responseDataMap, customerGlobalID));
 	    data.put("customerContactDetails", customerContactDetails(responseDataMap, customerGlobalID));
 	    dataParent.put("CustomerData", data);

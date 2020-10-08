@@ -11,6 +11,7 @@ import com.qubedlab.crair.models.CustomerParentBranch;
 import com.qubedlab.crair.repository.CustomerParentBranchRepository;
 import com.qubedlab.crair.service.CustomerArchiveConfigService;
 import com.qubedlab.crair.service.CustomerParentBranchService;
+import com.qubedlab.crair.util.Constants;
 
 @Service
 public class CustomerParentBranchServiceImpl implements CustomerParentBranchService {
@@ -23,17 +24,25 @@ public class CustomerParentBranchServiceImpl implements CustomerParentBranchServ
 
     @Override
     public List<CustomerParentBranch> listCustomersByParentId(String parentId) {
-	// TODO Auto-generated method stub
+
 	return repo.listCustomersByParentId(parentId);
     }
 
     @Override
-    public List<CustomerParentBranch> listCustomersByBranchId(String parentId, String branchId) {
+    public List<CustomerParentBranch> listCustomersByBranchId(String parentId, String branchId, String userid,
+	    String userrole) {
 
 	CustomerArchiveConfig cac = customerArchiveConfigService.getConfigByParentBranch(parentId, branchId);
 	LocalDateTime endDate = LocalDateTime.now();
 	LocalDateTime startDate = endDate.minusDays(cac.getRetrieveRecordsForLastDays());
-	return repo.listCustomersByBranchId(branchId, startDate, endDate);
+	if (userrole.compareToIgnoreCase(Constants.MANAGER) == 0) {
+	    return repo.listCustomersByBranchId(branchId, startDate, endDate);
+	} else {
+
+	    return repo.listCustomersByBranchIdUserId(branchId, startDate, endDate, userid);
+
+	}
+
     }
 
     @Override
@@ -44,8 +53,8 @@ public class CustomerParentBranchServiceImpl implements CustomerParentBranchServ
     }
 
     @Override
-    public void save(CustomerParentBranch customerParentBranch) {
-	repo.save(customerParentBranch);
+    public CustomerParentBranch save(CustomerParentBranch customerParentBranch) {
+	return repo.save(customerParentBranch);
     }
 
     @Override

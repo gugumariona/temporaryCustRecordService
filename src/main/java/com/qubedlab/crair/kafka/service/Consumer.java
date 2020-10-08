@@ -28,6 +28,7 @@ import com.qubedlab.crair.service.CustomerPreviousContactDetailsService;
 import com.qubedlab.crair.service.DecodeIDDataService;
 import com.qubedlab.crair.service.GlobalIDService;
 import com.qubedlab.crair.service.RelativesContactDetailsService;
+import com.qubedlab.crair.util.Constants;
 
 @Service
 public class Consumer {
@@ -83,7 +84,10 @@ public class Consumer {
 	    LOGGER.info("CreateProfile :" + CreateProfile);
 	    JsonObject convertedObject = new Gson().fromJson(CreateProfile, JsonObject.class);
 	    Map<String, Object> responseDataMap = decodeIDDataService
-		    .decodeCustomerScannedId(convertedObject.get("idData").toString());
+		    .decodeCustomerScannedId(convertedObject.get(Constants.IDDATA).toString());
+
+	    String userId = convertedObject.get(Constants.USER_ID).toString();
+	    responseDataMap.put(Constants.USER_ID, userId);
 
 	    saveCustomerScannedID(responseDataMap);
 
@@ -184,6 +188,7 @@ public class Consumer {
 		cpb.setCustomerGlobalID(customerGlobalID.toString());
 		cpb.setBranchId("1509931");
 		cpb.setParentId("1509932");
+		cpb.setUserId(responseDataMap.get(Constants.USER_ID).toString());
 		cpb.setLicenseIDNumber(responseDataMap.get("License_ID_Number").toString());
 		cpb.setDateLastScanned(LocalDateTime.now());
 		customerParentBranchService.save(cpb);
@@ -211,6 +216,7 @@ public class Consumer {
 		cpb.setCustomerGlobalID(customerGlobalID.toString());
 		cpb.setBranchId("1509931");
 		cpb.setParentId("1509932");
+		cpb.setUserId(responseDataMap.get(Constants.USER_ID).toString());
 		cpb.setLicenseIDNumber(responseDataMap.get("License_ID_Number").toString());
 		cpb.setDateLastScanned(LocalDateTime.now());
 		customerParentBranchService.save(cpb);
@@ -230,6 +236,7 @@ public class Consumer {
 		    cpb.setCustomerGlobalID(customerGlobalID.toString());
 		    cpb.setBranchId("1509931");
 		    cpb.setParentId("1509932");
+		    cpb.setUserId(responseDataMap.get(Constants.USER_ID).toString());
 		    cpb.setLicenseIDNumber(responseDataMap.get("License_ID_Number").toString());
 		    cpb.setDateLastScanned(LocalDateTime.now());
 		    customerParentBranchService.save(cpb);
@@ -239,10 +246,10 @@ public class Consumer {
 	    producer.sendToGeneralResponse(responseDataMap);
 	    producer.sendToIDVerificationRequest(responseDataMap);
 
-	    data.put("customerPersonalDetails", temporaryCustomerWithErrorStatus(responseDataMap, customerGlobalID));
+	    data.put("customerPersonalDetails", temporaryCustomerService.CustomerByGlobalID(customerGlobalID));
 	    data.put("customerBiometricDetails", customerBiometricDetails(responseDataMap, customerGlobalID));
 	    data.put("customerContactDetails", customerContactDetails(responseDataMap, customerGlobalID));
-	    dataParent.put("CustomerData", data);
+	    dataParent.put("customerData", data);
 
 	    return dataParent;
 	}

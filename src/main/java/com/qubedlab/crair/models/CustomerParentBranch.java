@@ -36,4 +36,7 @@ public class CustomerParentBranch {
     @Column(name = "date_last_scanned")
     private LocalDateTime dateLastScanned;
 
+    @Column(name = "user_id")
+    private String userId;
+
 }
