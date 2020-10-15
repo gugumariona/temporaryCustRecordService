@@ -50,7 +50,7 @@ public void sendToIDVerificationRequest(Map<String, Object> data) {
 	Map<String, Object> map = new HashMap<String,Object>();
 		map.put("customerData",data);
 
-	 this.kafkaTemplate.send("id-verification-request", gson.toJson(map));
+	 this.kafkaTemplate.send("customer-profile-response", gson.toJson(map));
 
 	 
 }
