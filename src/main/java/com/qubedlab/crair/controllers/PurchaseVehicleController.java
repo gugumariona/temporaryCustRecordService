@@ -19,7 +19,7 @@ import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClient;
 import static org.springframework.http.HttpStatus.OK;
-import javax.validation.Valid;
+import com.qubedlab.crair.util.Constants;
 import java.util.List;
 import com.qubedlab.crair.service.Response;
 
@@ -36,9 +36,11 @@ public class PurchaseVehicleController {
    @Autowired
    PVehiclesService pVehiclesService;
 
+
+
    @Autowired
    CustomerDetailsProcessor customerDetailsProcessor;
- WebClient  clientInvent = WebClient.builder().baseUrl("https://qubedlab-dealer-inventory.herokuapp.com/extract")
+ WebClient  clientInvent = WebClient.builder().baseUrl(Constants.INVENTORY)
             .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE).build();
 
     @RequestMapping(value = "/getPurchaseVehicles", method = RequestMethod.POST)
