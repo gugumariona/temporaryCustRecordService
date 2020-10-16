@@ -47,7 +47,7 @@ public class TradeVehicleServiceImpl implements TradeVehiclesService {
                 return new Response<TradeVehicles>().buildErrorResponse("tradeVehicles with supplied ID not found");
             }
             return new Response<TradeVehicles>().buildSuccessResponse(tradeVehicles);
-        } catch (Exception ex) {
+        } catch (NullPointerException ex) {
             log.error(ex.getMessage());
             return new Response<TradeVehicles>().buildErrorResponse(ex.getMessage());
         }

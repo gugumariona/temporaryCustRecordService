@@ -14,7 +14,7 @@ public class TradeVehiclesAuditableImpl implements TradeVehiclesAuditable {
 
 
     @Override
-    public TradeVehicles findById(String id) throws Exception {
+    public TradeVehicles findById(String id) throws NullPointerException {
         return tradeVehiclesRepository.findById(id).orElse(null);
     }
 }

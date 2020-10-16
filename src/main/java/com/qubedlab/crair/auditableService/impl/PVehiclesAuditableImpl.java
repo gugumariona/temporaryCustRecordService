@@ -12,7 +12,7 @@ public class PVehiclesAuditableImpl implements GenericAuditableService {
     @Autowired
     PVehiclesRepository repository;
     @Override
-    public PVehicles findById(String id) throws Exception {
+    public PVehicles findById(String id) throws NullPointerException {
         return repository.findById(id).orElse(null);
     }
 }

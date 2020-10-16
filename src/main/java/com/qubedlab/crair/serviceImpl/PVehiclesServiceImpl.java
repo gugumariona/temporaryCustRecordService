@@ -45,7 +45,7 @@ public class PVehiclesServiceImpl implements PVehiclesService {
                 return new Response<PVehicles>().buildErrorResponse("pVehicles with supplied ID not found");
             }
             return new Response<PVehicles>().buildSuccessResponse(pVehicles);
-        } catch (Exception ex) {
+        } catch (NullPointerException ex) {
             log.error(ex.getMessage());
             return new Response<PVehicles>().buildErrorResponse(ex.getMessage());
         }
