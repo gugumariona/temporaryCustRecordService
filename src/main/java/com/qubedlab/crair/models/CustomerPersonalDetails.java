@@ -1,13 +1,14 @@
 package com.qubedlab.crair.models;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import lombok.Data;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 @Entity
 @Data
@@ -85,5 +86,48 @@ public class CustomerPersonalDetails {
 
     @Column(name = "Educ_Level")
     private String educLevel;
+
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @JoinTable(
+            name = "customer_purchase_vehicles",
+            uniqueConstraints = {
+                    @UniqueConstraint(columnNames = {"customer_global_id", "VIN"})},
+            joinColumns = {
+                    @JoinColumn(name = "customer_global_id")
+            },
+            inverseJoinColumns = {
+                    @JoinColumn(name = "vin")
+            }
+    )
+
+    private List<PVehicles> purchases = new ArrayList<>();
+
+
+
+    @OneToMany
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @JoinTable(
+            name = "customer_trade_vehicles",
+            uniqueConstraints = {
+                    @UniqueConstraint(columnNames = {"customer_global_id", "VIN"})},
+            joinColumns = {
+                    @JoinColumn(name = "customer_global_id")
+            },
+            inverseJoinColumns = {
+                    @JoinColumn(name = "vin")
+            }
+    )
+
+
+    List <TradeVehicles>trades = new ArrayList<>();
+
+
+
+
+
+    //trade relationship
+
+
 
 }

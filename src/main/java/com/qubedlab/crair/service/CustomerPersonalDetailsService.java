@@ -14,12 +14,20 @@ public interface CustomerPersonalDetailsService {
 
     public void deleteCustomer(String dlNumber);
 
+
     void deleteCustomer(CustomerPersonalDetails customer);
 
-    public List<CustomerPersonalDetails> listCustomerByGlobalID(String customerGlobalID);
+    List<CustomerPersonalDetails> listCustomerByGlobalID(String customerGlobalID);
 
-    public CustomerPersonalDetails CustomerByGlobalID(String customerGlobalID);
+    CustomerPersonalDetails CustomerByGlobalID(String customerGlobalID);
 
-    public List<CustomerPersonalDetails> serchCustomer(String dlNumber);
+    List<CustomerPersonalDetails> serchCustomer(String dlNumber);
+
+    Response<CustomerPersonalDetails> findByGlobal(String customerGlobalID);
+
+    Response<CustomerPersonalDetails> addCustomerPVehicle(String customerGlobalID, String VIN);
+
+    Response<CustomerPersonalDetails> addCustomerTradeVehicle(String customerGlobalID, String VIN);
+
 
 }
