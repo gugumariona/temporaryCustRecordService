@@ -20,10 +20,10 @@ public class TradeVehicles {
     private String Type;
     @Id
     private String VIN;
-    private String Year;
+    private int Year;
 
 
-    public TradeVehicles(String engine, String made_In, String make, String model, String style, String type, String VIN, String year) {
+    public TradeVehicles(String engine, String made_In, String make, String model, String style, String type, String VIN, int year) {
         Engine = engine;
         Made_In = made_In;
         Make = make;
@@ -34,11 +34,11 @@ public class TradeVehicles {
         Year = year;
     }
 
-    public String getYear() {
+    public int getYear() {
         return Year;
     }
 
-    public void setYear(String year) {
+    public void setYear(int year) {
         Year = year;
     }
 

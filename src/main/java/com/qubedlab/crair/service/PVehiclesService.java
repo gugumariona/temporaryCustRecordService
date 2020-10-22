@@ -12,6 +12,6 @@ public interface PVehiclesService {
     public PVehicles save(PVehicles pVehicles);
     public PVehicles getVehByVin(String vin);
 
-    public List<PVehicles>findAll();
+    public List<PVehicles> findAll();
     Response<PVehicles> findById(String vin);
 }

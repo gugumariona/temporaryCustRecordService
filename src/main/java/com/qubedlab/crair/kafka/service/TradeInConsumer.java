@@ -41,6 +41,7 @@ public class TradeInConsumer {
         tv.setModel(tradeData.getModel());
         tv.setStyle(tradeData.getStyle());
         tv.setVIN(tradeData.getVIN());
+
         tv.setYear(tradeData.getYear());
         tradeVehiclesService.save(tv);
 

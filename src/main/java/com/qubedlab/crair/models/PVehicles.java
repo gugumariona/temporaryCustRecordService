@@ -3,6 +3,7 @@ package com.qubedlab.crair.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.*;
 
 
 import javax.persistence.*;
@@ -10,6 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PVehicles {
 
@@ -33,18 +36,16 @@ public class PVehicles {
 
     private double Mileage;
 
-    public String getVIN() {
-        return VIN;
-    }
+    @Column(name = "Selected", columnDefinition = "boolean default false", nullable = false)
 
-    public void setVIN(String VIN) {
-        this.VIN = VIN;
-    }
+    private boolean Selected =false;
+
 
     public PVehicles() {
     }
 
-    public PVehicles(String stockType, int year, String makeName, String model, String VIN, String trimLevel, double stickerPrice, double mileage) {
+    public PVehicles(String stockType, int year, String makeName, String model, String VIN, String trimLevel, double stickerPrice, double mileage,boolean selected) {
+       Selected = selected;
         StockType = stockType;
         Year = year;
         MakeName = makeName;
@@ -53,6 +54,8 @@ public class PVehicles {
         TrimLevel = trimLevel;
         StickerPrice = stickerPrice;
         Mileage = mileage;
+        this.Selected = selected;
+        this.customerPersonalDetails = customerPersonalDetails;
     }
 
     public String getStockType() {
@@ -87,6 +90,14 @@ public class PVehicles {
         Model = model;
     }
 
+    public String getVIN() {
+        return VIN;
+    }
+
+    public void setVIN(String VIN) {
+        this.VIN = VIN;
+    }
+
     public String getTrimLevel() {
         return TrimLevel;
     }
@@ -109,6 +120,22 @@ public class PVehicles {
 
     public void setMileage(double mileage) {
         Mileage = mileage;
+    }
+
+    public boolean isSelected() {
+        return Selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.Selected = selected;
+    }
+
+    public List<CustomerPersonalDetails> getCustomerPersonalDetails() {
+        return customerPersonalDetails;
+    }
+
+    public void setCustomerPersonalDetails(List<CustomerPersonalDetails> customerPersonalDetails) {
+        this.customerPersonalDetails = customerPersonalDetails;
     }
 
     @JsonIgnore

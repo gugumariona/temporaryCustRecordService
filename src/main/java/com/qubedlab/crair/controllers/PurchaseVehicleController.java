@@ -20,7 +20,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClient;
 import static org.springframework.http.HttpStatus.OK;
 import com.qubedlab.crair.util.Constants;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import com.qubedlab.crair.service.Response;
 
 
@@ -96,9 +100,14 @@ public class PurchaseVehicleController {
     @ApiOperation(notes = "Endpoint to get all purchase vehicles",
             value = "Gets all Purchase Vehicles", nickname = "getAllPurchaseVehicles",
             tags = {"PurchaseVehicles"})
-    public ResponseEntity<List<PVehicles>> getAllPurchaseVehicles() {
-        return new ResponseEntity<>(pVehiclesService.findAll(), HttpStatus.OK);
+    public ResponseEntity<Map<String, Object>> getAllPurchaseVehicles() {
+        Map<String, Object> data = new HashMap<>();
+        List pvehicle = pVehiclesService.findAll();
+        data.put("purchaseVehicles",pvehicle);
+        return new ResponseEntity<>(data, HttpStatus.OK);
     }
+
+//return all purchase vehicles
 
 
          //add purchase vehicle to customer

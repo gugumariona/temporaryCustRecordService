@@ -12,4 +12,6 @@ public interface PVehiclesRepository extends JpaRepository<PVehicles,String> {
     @Query("FROM PVehicles WHERE VIN = ?1")
     public PVehicles findByVin(String vin);
 
+
+
 }

@@ -32,7 +32,6 @@ public class PVehiclesServiceImpl implements PVehiclesService {
     }
 
     public List<PVehicles> findAll() {
-
         List<PVehicles> purchaseVehicles = pVehiclesRepository.findAll();
         return purchaseVehicles;
     }
