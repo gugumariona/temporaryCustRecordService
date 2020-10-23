@@ -77,6 +77,8 @@ public class PurchaseVehicleController {
         pv.setTrimLevel(getSth.getString("TrimLevel"));
         pv.setMakeName(getSth.getString("MakeName"));
         pv.setMileage(getSth.getDouble("Mileage"));
+        pv.setStockNo(getSth.getInt("StockNo"));
+        pv.setColor(getSth.getString("Color"));
         pVehiclesService.save(pv);
 
         log.info("message"+pv.toString());

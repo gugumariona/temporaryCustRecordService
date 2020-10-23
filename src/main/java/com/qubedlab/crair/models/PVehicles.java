@@ -16,46 +16,52 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PVehicles {
 
-    @JsonProperty("StockType")
+
     private String StockType;
-    @JsonProperty("Year")
+
     private int Year;
-    @JsonProperty("MakeName")
+
     private String MakeName;
-    @JsonProperty("Model")
+
     private String Model;
     @Id
-    @JsonProperty("VIN")
+
     private String VIN;
-    @JsonProperty("TrimLevel")
+
      private String TrimLevel;
-    @JsonProperty("StickerPrice")
+
 
     private double StickerPrice;
-    @JsonProperty("Mileage")
+
 
     private double Mileage;
+    @Column(name = "StockNo", columnDefinition = "int default 0",nullable = false)
+     private int StockNo;
+
+    private String Color;
 
     @Column(name = "Selected", columnDefinition = "boolean default false", nullable = false)
-
-    private boolean Selected =false;
+      private boolean Selected =false;
 
 
     public PVehicles() {
     }
 
-    public PVehicles(String stockType, int year, String makeName, String model, String VIN, String trimLevel, double stickerPrice, double mileage,boolean selected) {
-       Selected = selected;
-        StockType = stockType;
-        Year = year;
-        MakeName = makeName;
-        Model = model;
-        this.VIN = VIN;
-        TrimLevel = trimLevel;
-        StickerPrice = stickerPrice;
-        Mileage = mileage;
-        this.Selected = selected;
-        this.customerPersonalDetails = customerPersonalDetails;
+
+    public int getStockNo() {
+        return StockNo;
+    }
+
+    public void setStockNo(int stockNo) {
+        StockNo = stockNo;
+    }
+
+    public String getColor() {
+        return Color;
+    }
+
+    public void setColor(String color) {
+        Color = color;
     }
 
     public String getStockType() {
